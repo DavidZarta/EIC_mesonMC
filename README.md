@@ -1,4 +1,4 @@
-# EICmesonMC
+# EIC_mesonMC
 
 The space and momentum distribution of hadronic constituents (gluons,
 sea quarks) inside the nucleon is of utmost importance in studies of QCD.
