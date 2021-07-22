@@ -21,7 +21,7 @@ from scipy.interpolate import griddata
 import sys
 from sys import path
 sys.path.insert(1,'./src/process/cuts/') # Note: this is relative to the bash script NOT this python script!
-import cuts as c
+#import cuts as c
 
 kinematics = sys.argv[1]
 

@@ -45,7 +45,8 @@ def binData():
     ypi_raw = d.findKey("ypi")
     tpi_raw = d.findKey("tpi")
 
-    xbins  = np.arange(xbinwidth/2,1.,xbinwidth).tolist()
+    #xbins  = np.arange(xbinwidth/2,1.,xbinwidth).tolist()
+    xbins  = np.arange(xbinwidth,1.,xbinwidth).tolist()
     qbins =  np.arange(qbinwidth/2,1000.,qbinwidth).tolist()
     tbins =  np.arange(tbinwidth/2,1.,tbinwidth).tolist()
     xLbins =  np.arange(xLbinwidth/2,1.,xLbinwidth).tolist()
