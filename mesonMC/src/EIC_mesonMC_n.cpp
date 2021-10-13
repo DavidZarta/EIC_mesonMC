@@ -167,7 +167,7 @@ int mainx(double xMin,double xMax, double Q2Min,double Q2Max, double rnum, const
   double weight_tdis;
   
   // char tTitle[80], tName[18], rName[32];
-  char tTitle[80], tName[18], rName[60];
+  char tTitle[80], tName[18], rName[62];
   
   sprintf(tTitle,"p(e,e'\u03C0n)X Event Generation %3.0f GeV/c x%4.0f GeV/c",kBeam, PBeam);
   sprintf(rName,"../OUTPUTS/pi_n_%.1fon%.1f_x%.4f-%.4f_q%.1f-%.1f.root", kBeam, PBeam,xMin,xMax,Q2Min,Q2Max);

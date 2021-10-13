@@ -26,7 +26,7 @@ print(df)
 
 xbj = df['TDIS_xbj']
 Q2 = df['TDIS_Q2']
-fpi = df['fpi']
+#fpi = df['fpi']
 t = df['TDIS_t']
 xL = df['xL']
 y = df['TDIS_y']
@@ -41,7 +41,7 @@ f2pi= 0.361*f2N
 # Create cut dictionary
 cutDict = {}
 
-qbinarray = [225,250,275,300,325,350 ,375,400]
+qbinarray = [7,15,30,60,120,240 ,480,1000]
 #qbinarray = np.arange(qbinwidth/2,1000.,qbinwidth).tolist()
 for i,q in enumerate(qbinarray) :
     qtmp = '{"Q2cut%i" : ((%0.1f <= Q2) & (Q2 <= %0.1f))}' % (i,qbinarray[i]-qbinwidth/2,qbinarray[i]+qbinwidth/2)
@@ -137,6 +137,18 @@ cut_x8_q7 = ["xcut8","Q2cut7","ycut"] # Q2= 1000 GeV^2
 '''
 
                    #this are the Q^2 ingraph. lines 122-1
+'''
+cut60 = ["Q2cut3","ycut"]
+cut120 = ["Q2cut4","ycut"]
+cut240 = ["Q2cut5","ycut"]
+cut480 = ["Q2cut6","ycut"]
+cut1000 = ["Q2cut7","ycut"]
+'''
+cut60 = ["Q2cut3","ycut","xLcut80"]
+cut120 = ["Q2cut4","ycut","xLcut80"]
+cut240 = ["Q2cut5","ycut", "xLcut80"]
+cut480 = ["Q2cut6","ycut", "xLcut80"]
+cut1000 = ["Q2cut7","ycut", "xLcut80"]
 
 cut200= ["Q2cut0","xLcut85","ycut"]
 cut222= ["Q2cut1","xLcut85","ycut"]                #added Q^2 7,15,30
@@ -147,7 +159,7 @@ cut311 = ["Q2cut5","xLcut85","ycut"]
 cut333 = ["Q2cut6","xLcut85","ycut"]
 cut356 = ["Q2cut7","xLcut85","ycut"]       #endddd
 
-
+''''
 def F2pi(xpi, Q2):
     points,values=np.load('./../../analysis/interpGrids/xpiQ2.npy'),np.load('./../../analysis/interpGrids/F2pi.npy')
     F2pi=lambda xpi,Q2: griddata(points,values,(np.log10(xpi),np.log10(Q2)))
@@ -155,24 +167,109 @@ def F2pi(xpi, Q2):
 
 # Calculate cross-section using Patrick's interpolate grid
 def ds_dxdQ2dxLdt(x, xL,t):
-    points200,values200=np.load('./../../analysis/xsec/pointsxsec7.npy'),np.load('./../../analysis/xsec/valuesxsec7.npy')
-    points222,values222=np.load('./../../analysis/xsec/pointsxsec15.npy'),np.load('./../../analysis/xsec/valuesxsec15.npy')
-    points244,values244=np.load('./../../analysis/xsec/pointsxsec30.npy'),np.load('./../../analysis/xsec/valuesxsec30.npy')
-    points267,values267=np.load('./../../analysis/xsec/pointsxsec60.npy'),np.load('./../../analysis/xsec/valuesxsec60.npy')
-    points289,values289=np.load('./../../analysis/xsec/pointsxsec120.npy'),np.load('./../../analysis/xsec/valuesxsec120.npy')
-    points311,values311=np.load('./../../analysis/xsec/pointsxsec240.npy'),np.load('./../../analysis/xsec/valuesxsec240.npy')
-    points333,values333=np.load('./../../analysis/xsec/pointsxsec480.npy'),np.load('./../../analysis/xsec/valuesxsec480.npy')
-    points356,values356=np.load('./../../analysis/xsec/pointsxsec1000.npy'),np.load('./../../analysis/xsec/valuesxsec1000.npy')
-    sigma200=lambda x,xL,t: griddata(points200,values200,(x,xL,t))
-    sigma222=lambda x,xL,t: griddata(points222,values222,(x,xL,t))
-    sigma244=lambda x,xL,t: griddata(points244,values244,(x,xL,t))
-    sigma267=lambda x,xL,t: griddata(points267,values267,(x,xL,t))
-    sigma289=lambda x,xL,t: griddata(points289,values289,(x,xL,t))
-    sigma311=lambda x,xL,t: griddata(points311,values311,(x,xL,t))
-    sigma333=lambda x,xL,t: griddata(points333,values333,(x,xL,t))
-    sigma356=lambda x,xL,t: griddata(points356,values356,(x,xL,t))
+    points60,values60=np.load('./../../analysis/xsec/pointsxsec60.npy'),np.load('./../../analysis/xsec/valuesxsec60.npy')
+    points120,values120=np.load('./../../analysis/xsec/pointsxsec120.npy'),np.load('./../../analysis/xsec/valuesxsec120.npy')
+    points240,values240=np.load('./../../analysis/xsec/pointsxsec240.npy'),np.load('./../../analysis/xsec/valuesxsec240.npy')
+    points480,values480=np.load('./../../analysis/xsec/pointsxsec480.npy'),np.load('./../../analysis/xsec/valuesxsec480.npy')
+    sigma60=lambda x,xL,t: griddata(points60,values60,(x,xL,t))
+    sigma120=lambda x,xL,t: griddata(points120,values120,(x,xL,t))
+    sigma240=lambda x,xL,t: griddata(points240,values240,(x,xL,t))
+    sigma480=lambda x,xL,t: griddata(points480,values480,(x,xL,t))
 
-    return [sigma200(x,xL,t),sigma222(x,xL,t),sigma244(x,xL,t),sigma267(x,xL,t),sigma289(x,xL,t),sigma311(x,xL,t),sigma333(x,xL,t),sigma356(x,xL,t)]
+    return [sigma60(x,xL,t),sigma120(x,xL,t),sigma240(x,xL,t),sigma480(x,xL,t)]
+    '''
+def F2pi(xpi, Q2):
+    points,values=np.load('./analysis/interpGrids/xpiQ2.npy'),np.load('./analysis/interpGrids/F2pi.npy')
+    F2pi=lambda xpi,Q2: griddata(points,values,(np.log10(xpi),np.log10(Q2)))
+    return F2pi(xpi,Q2)
+fpi=F2pi(xpi,Q2)
+# Calculate cross-section using Patrick's interpolate grid
+def ds_dxdQ2dxLdt(x, xL,t):
+    points60,values60=np.load('./analysis/xsec/pointsxsec60.npy'),np.load('./analysis/xsec/valuesxsec60.npy')
+    points120,values120=np.load('./analysis/xsec/pointsxsec120.npy'),np.load('./analysis/xsec/valuesxsec120.npy')
+    points240,values240=np.load('./analysis/xsec/pointsxsec240.npy'),np.load('./analysis/xsec/valuesxsec240.npy')
+    points480,values480=np.load('./analysis/xsec/pointsxsec480.npy'),np.load('./analysis/xsec/valuesxsec480.npy')
+    sigma60=lambda x,xL,t: griddata(points60,values60,(x,xL,t))
+    sigma120=lambda x,xL,t: griddata(points120,values120,(x,xL,t))
+    sigma240=lambda x,xL,t: griddata(points240,values240,(x,xL,t))
+    sigma480=lambda x,xL,t: griddata(points480,values480,(x,xL,t))
+    return [sigma60(x,xL,t),sigma120(x,xL,t),sigma240(x,xL,t),sigma480(x,xL,t)]
+def fpivxpi_Plot2():
+    
+    f = plt.figure(figsize=(11.69,8.27))
+    plt.rcParams.update({'font.size': 15})
+    plt.style.use('classic')
+    #plt.title("{0} $\leq$ xL $\leq$ {1}".format(xlmin,xlmax))
+    
+    ax = f.add_subplot(221)
+    xpiscat4 = ax.scatter(cut.applyCuts(xpi,cut60),cut.applyCuts(f2pi,cut60),color="y",label="HERA",s=150,marker="x")#hera
+    plt.plot([.02,.08,.5],[.28,.22, .16],color="r",label="GRV fit")
+    ax.text(0.25, 0.65, '$Q^2$=60 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    xpiscat4n = ax.errorbar(cut.applyCuts(xpi,cut60),cut.applyCuts(fpi,cut60),yerr=np.sqrt(cut.applyCuts(lumi,cut60))/cut.applyCuts(lumi,cut60),fmt='.',label='NLO PDF',ecolor='cyan',capsize=2, capthick=2,marker="o",markersize=10)
+    #plt.plot([0.1,0.5,0.95],[.2,0.15,0.13],color="y")
+    plt.xscale('log')
+    plt.ylim(0,0.3)
+    plt.xlim(1e-3,1.)
+    plt.legend()
+    leg=plt.legend(loc='lower left')
+    ax.text(0.25, 0.65, '$Q^2$=60 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
+    ax.xaxis.set_major_formatter(plt.NullFormatter())
+    ax.set_yticks([0.0,0.1,0.2,0.3])
+    ax.set_xticks([1e-2,1e-1])
+    
+
+    plt.ylabel('$F^{\pi}_{2}$', fontsize=20)
+    
+    ax = f.add_subplot(222)
+    xpiscat5 = ax.scatter(cut.applyCuts(xpi,cut120),cut.applyCuts(f2pi,cut120),color="y",s=150,marker="x")#hera
+    plt.plot([0.04,.1,.5],[0.26,.19,0.15], label="GRV fit",color="r")
+    ax.text(0.25, 0.65, '$Q^2$=120 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    xpiscat5 = ax.errorbar(cut.applyCuts(xpi,cut120),cut.applyCuts(fpi,cut120),yerr=np.sqrt(cut.applyCuts(lumi,cut120))/cut.applyCuts(lumi,cut120),fmt='.',label='$Q^2$=120 $GeV^2$',ecolor='cyan',capsize=2, capthick=2,marker="o",markersize=10)
+    #plt.plot([0.1,0.5,0.7],[0.17,0.15,0.12], label="GRV fit",color="y")
+    plt.xscale('log')
+    plt.ylim(0,0.3)
+    plt.xlim(1e-3,1.)
+    ax.text(0.25, 0.65, '$Q^2$=120 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.yaxis.set_major_formatter(plt.NullFormatter())
+    ax.xaxis.set_major_formatter(plt.NullFormatter())
+    ax.set_yticks([0.0,0.1,0.2,0.3])
+    ax.set_xticks([1e-2,1e-1])
+    
+    ax = f.add_subplot(223)
+    xpiscat6 = ax.scatter(cut.applyCuts(xpi,cut240),cut.applyCuts(f2pi,cut240),color="y",s=150,marker="x")#hera
+    plt.plot([0.05,.09,.9],[0.29,.23,0.13],  label="GRV fit",color="r")
+    ax.text(0.25, 0.65, '$Q^2$=240 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    xpiscat6 = ax.errorbar(cut.applyCuts(xpi,cut240),cut.applyCuts(fpi,cut240),yerr=np.sqrt(cut.applyCuts(lumi,cut240))/cut.applyCuts(lumi,cut240),fmt='.',label='$Q^2$=240 $GeV^2$',ecolor='cyan',capsize=2, capthick=2,marker="o",markersize=10)
+    #plt.plot([0.1,0.2,0.95],[0.2,0.17,0.12], label="GRV fit",color="y")
+    plt.xscale('log')
+    plt.ylim(0,0.3)
+    plt.xlim(1e-3,1.)
+    ax.text(0.25, 0.65, '$Q^2$=240 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
+    ax.set_yticks([0.0,0.1,0.2,0.3])
+    ax.set_xticks([1e-2,1e-1])
+
+    ax = f.add_subplot(224)
+    xpiscat7 = ax.scatter(cut.applyCuts(xpi,cut480),cut.applyCuts(f2pi,cut480),color="y",s=150,marker="x")#hera
+    plt.plot([0.06,.1,.7],[0.23,.20,0.14],  label="GRV fit",color="r")
+    ax.text(0.25, 0.65, '$Q^2$=480 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    xpiscat7 = ax.errorbar(cut.applyCuts(xpi,cut480),cut.applyCuts(fpi,cut480),yerr=np.sqrt(cut.applyCuts(lumi,cut480))/cut.applyCuts(lumi,cut480),fmt='.',label='$Q^2$=480 $GeV^2$',ecolor='cyan',capsize=2, capthick=2,marker="o",markersize=10)
+    #plt.plot([0.2,0.5,0.9],[0.15,0.14,0.13], label="GRV fit",color="y")
+    plt.xscale('log')
+    plt.ylim(0,0.3)
+    plt.xlim(1e-3,1.)
+    ax.text(0.25, 0.65, '$Q^2$=480 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.yaxis.set_major_formatter(plt.NullFormatter())
+    ax.set_yticks([0.0,0.1,0.2,0.3])
+    ax.set_xticks([1e-2,1e-1])
+
+    plt.xlabel('$x_\pi$', fontsize=20)    
+    plt.tight_layout()
+    plt.subplots_adjust(hspace=0.0,wspace=0.0)
+
+    plt.style.use('default')
+
 
 def fpivxpi_Plot():
     
@@ -184,11 +281,11 @@ def fpivxpi_Plot():
     #good 7 !
     ax = f.add_subplot(331)
     xpiscat2 = ax.scatter(cut.applyCuts(xpi,cut200),cut.applyCuts(f2pi,cut200))
-    plt.plot([0.2,0.5,.9],[.15,.145, .139], label="GRV fit",color="r")        #change
+    plt.plot([0.001,0.008,.04],[.29,.2, .13], label="GRV fit",color="r")        #change
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1.)
-    ax.text(0.25, 0.65, '$Q^2$=225 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=7 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
     #ax.xaxis.set_major_formatter(plt.NullFormatter())
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6])                                     #change
@@ -197,11 +294,11 @@ def fpivxpi_Plot():
     #good 15 !
     ax = f.add_subplot(332)
     xpiscat2 = ax.scatter(cut.applyCuts(xpi,cut222),cut.applyCuts(f2pi,cut222))
-    plt.plot([0.2,0.5,.9],[0.167,.155, .14], label="GRV fit",color="r")
+    plt.plot([0.009,0.09,.2],[0.29,.18, .14], label="GRV fit",color="r")
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1.)
-    ax.text(0.25, 0.65, '$Q^2$=250 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=6=15 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
     #ax.xaxis.set_major_formatter(plt.NullFormatter())
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6])
@@ -210,11 +307,11 @@ def fpivxpi_Plot():
     #good 30 !
     ax = f.add_subplot(333)
     xpiscat3 = ax.scatter(cut.applyCuts(xpi,cut244),cut.applyCuts(f2pi,cut244))
-    plt.plot([0.3,0.65,.95],[0.166,.15,.14], label="GRV fit",color="r")
+    plt.plot([0.01,0.05,.2],[0.29,.21,.16], label="GRV fit",color="r")
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1.)
-    ax.text(0.25, 0.65, '$Q^2$=275 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=30 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
     #ax.xaxis.set_major_formatter(plt.NullFormatter())
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6])
@@ -223,11 +320,11 @@ def fpivxpi_Plot():
     #good 60 !
     ax = f.add_subplot(334)
     xpiscat4 = ax.scatter(cut.applyCuts(xpi,cut267),cut.applyCuts(f2pi,cut267))
-    plt.plot([.5,.75,.95],[.155,.14, .135], label="GRV fit",color="r")
+    plt.plot([.02,.08,.5],[.28,.22, .16], label="GRV fit",color="r")
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1.)
-    ax.text(0.25, 0.65, '$Q^2$=300 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=60 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
     #ax.xaxis.set_major_formatter(plt.NullFormatter())
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6])
@@ -238,11 +335,11 @@ def fpivxpi_Plot():
     #good 120 !
     ax = f.add_subplot(335)
     xpiscat5 = ax.scatter(cut.applyCuts(xpi,cut289),cut.applyCuts(f2pi,cut289))
-    plt.plot([0.6,.75,1.5],[0.145,.13,0.12], label="GRV fit",color="r")
+    plt.plot([0.04,.1,.5],[0.26,.19,0.15], label="GRV fit",color="r")
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1)
-    ax.text(0.25, 0.65, '$Q^2$=325 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=120 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_formatter(plt.NullFormatter())
     #ax.xaxis.set_major_formatter(plt.NullFormatter())
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6])
@@ -251,11 +348,11 @@ def fpivxpi_Plot():
     #good 240 !
     ax = f.add_subplot(336)
     xpiscat6 = ax.scatter(cut.applyCuts(xpi,cut311),cut.applyCuts(f2pi,cut311))
-    plt.plot([0.6,.75,1.5],[0.14,.13,0.12],  label="GRV fit",color="r")
+    plt.plot([0.05,.09,.9],[0.29,.23,0.13],  label="GRV fit",color="r")
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1)
-    ax.text(0.25, 0.65, '$Q^2$=350 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=240 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_locator(MaxNLocator(prune='both'))
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6]) 
     #ax.set_xticks([1e-4,1])
@@ -263,11 +360,11 @@ def fpivxpi_Plot():
     #good 480
     ax = f.add_subplot(337)
     xpiscat7 = ax.scatter(cut.applyCuts(xpi,cut333),cut.applyCuts(f2pi,cut333))
-    plt.plot([0.7,.75,1.5],[0.139,.13,0.12],  label="GRV fit",color="r")
+    plt.plot([0.06,.1,.7],[0.23,.20,0.14],  label="GRV fit",color="r")
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1)
-    ax.text(0.25, 0.65, '$Q^2$=375 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=480 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_formatter(plt.NullFormatter())
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6])
     #ax.set_xticks([1e-4,1])
@@ -275,11 +372,11 @@ def fpivxpi_Plot():
     #good 1000
     ax = f.add_subplot(338)
     xpiscat8 = ax.scatter(cut.applyCuts(xpi,cut356),cut.applyCuts(f2pi,cut356))
-    plt.plot([0.75,.85,1.5],[0.137,.13,0.12],  label="GRV fit",color="r")
+    plt.plot([0.1,.5,1],[0.21,.16,0.13],  label="GRV fit",color="r")
     plt.xscale('log')
     plt.ylim(0.12,0.3)                                                          #change
     plt.xlim(.0001,1)
-    ax.text(0.25, 0.65, '$Q^2$=400 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
+    ax.text(0.25, 0.65, '$Q^2$=1000 $GeV^2$', transform=ax.transAxes, fontsize=15, verticalalignment='top', horizontalalignment='left')
     #ax.yaxis.set_major_formatter(plt.NullFormatter())
     #ax.set_yticks([0,.1,.2,.3,.4,0.5,0.6])
     #ax.set_xticks([1e-4,1])
@@ -293,7 +390,7 @@ def fpivxpi_Plot():
 
 
 def main() :
-    fpivxpi_Plot()
+    fpivxpi_Plot2()
    # phaseSpace_Plots()
     plt.show()
 if __name__=='__main__': main()
